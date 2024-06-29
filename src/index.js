@@ -1,6 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
 import healthCheckRouter from './routes/health-check.js';
+import NotFoundError from './errors/not-found-error.js';
+import errorHandler from './middlewares/error-handler.js';
+
 
 // === Vars ===
 const app = express();
@@ -28,11 +31,12 @@ app.get('/docs', (req, res) => {
 
 // === Catch-All Route ===
 app.all('*', (req, res) => {
-    res.status(404).send('<h1>Page Not Found</h1>')
+    throw new NotFoundError();
 })
 
-// === Errors ===
 
+// === Errors ===
+app.use(errorHandler);
 
 
 app.listen(PORT, () => {
