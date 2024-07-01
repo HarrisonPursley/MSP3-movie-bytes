@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import healthCheckRouter from './routes/health-check.js';
+import userRouter from './routes/users.js';
 import NotFoundError from './errors/not-found-error.js';
 import errorHandler from './middlewares/error-handler.js';
 import connectDB from './config/connectDB.js';
@@ -23,7 +24,8 @@ app.use(express.urlencoded({extended: true}));
 
 
 // === Routes ===
-app.use('/src/routes/health-check.js', healthCheckRouter)
+app.use('/src/routes/health-check.js', healthCheckRouter);
+app.use('/src/routes/users.js', userRouter);
 
 
 /**
