@@ -1,10 +1,13 @@
+import 'dotenv/config'
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import healthCheckRouter from './routes/health-check.js';
 import NotFoundError from './errors/not-found-error.js';
 import errorHandler from './middlewares/error-handler.js';
+import connectDB from './config/connectDB.js';
 
+console.log(process.env.MONGODB_URI);
 
 // === Vars ===
 const app = express();
@@ -41,6 +44,9 @@ app.all('*', (req, res) => {
 app.use(errorHandler);
 
 
+
+// Main
+connectDB();
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 });
