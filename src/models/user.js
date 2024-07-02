@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 const userSchema = new mongoose.Schema({
@@ -26,5 +28,24 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true,
 });
+
+// Password encryption
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashedPassword;
+    }
+    next();
+});
+
+
+// Generates JWT Token using user's info
+userSchema.methods.generateJWT = function() {
+    return jwt.sign({
+        id: this._id,
+        email: this.email
+    }, process.env.JWT_SECRET, {expiresIn: '24h'});
+}
+
 
 export default mongoose.model('User', userSchema);

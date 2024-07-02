@@ -23,8 +23,15 @@ router.post('/signup', async (req, res) => {
     const user = new User({email, password});
     await user.save();
 
-    res.status(201).json(user);
+    const authToken = user.generateJWT();
 
+    // optional (session cookie)
+    req.session = {
+        authToken,
+    }
+
+    // token or user
+    res.status(201).json(user);
 });
 
 

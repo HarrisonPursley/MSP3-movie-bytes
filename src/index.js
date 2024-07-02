@@ -2,6 +2,8 @@ import 'dotenv/config'
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import cookieSession from 'cookie-session';
+
 import healthCheckRouter from './routes/health-check.js';
 import userRouter from './routes/users.js';
 import NotFoundError from './errors/not-found-error.js';
@@ -21,6 +23,12 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieSession({
+    name: 'myAppSession',
+    secret: process.env.COOKIE_SECRET,
+    secure: process.env.NODE_ENV === 'production',
+    
+}));
 
 
 // === Routes ===
